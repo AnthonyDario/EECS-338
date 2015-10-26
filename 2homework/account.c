@@ -50,13 +50,13 @@ int get_semid(key_t semkey) {
 // gets the shared memory id
 int get_shmid(key_t shmkey) {
 	int id = shmget(shmkey,
-					sizeof(struct shared_variables),
+					sizeof(struct shared_variable_struct),
 					0777 | IPC_CREAT
 				    );
 
 	if (id == -1) {
 		perror("shmget failed");
-		exit(EXIT_ FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	return id;
 }
@@ -65,8 +65,8 @@ int get_shmid(key_t shmkey) {
 void semaphore_wait(int semid, int semnumber) {
 		struct sembuf wait_buffer;
 		wait_buffer.sem_num = semnumber;
-		wait_buffer.semop = -1;
-		wait_buffer.semflg = 0;
+		wait_buffer.sem_op = -1;
+		wait_buffer.sem_flg = 0;
 		if (semop(semid, &wait_buffer, 1) == -1){
 			perror("semaphore_wait failed");
 			exit(EXIT_FAILURE);
@@ -77,8 +77,8 @@ void semaphore_wait(int semid, int semnumber) {
 void semaphore_signal(int semid, int semnumber) {
 		struct sembuf signal_buffer;
 		signal_buffer.sem_num = semnumber;
-		signal_buffer.semop = 1;
-		signal_buffer.semflg = 0;
+		signal_buffer.sem_op = 1;
+		signal_buffer.sem_flg = 0;
 		if (semop(semid, &signal_buffer, 1) == -1){
 			perror("semaphore_signal failed");
 			exit(EXIT_FAILURE);
@@ -116,6 +116,11 @@ int main(int argc, char *argv[]) {
 
 	printf("main process: %d\n", getpid());
 
+	if (argc != 2) {
+		printf("need only two arguments\n");
+		exit(EXIT_FAILURE);
+	}
+
 	// create the semaphores
 	union semun semaphore_values;
 
@@ -124,7 +129,7 @@ int main(int argc, char *argv[]) {
 	semaphore_init_values[SEMAPHORE_WAITING] = 0;
 	semaphore_values.array = semaphore_init_values;
 
-	int semid = get_semid((ket_t)SEMAPHORE_KEY);
+	int semid = get_semid((key_t)SEMAPHORE_KEY);
 	if (semctl(semid, SEMAPHORE_MUTEX, SETALL, semaphore_values) == -1) {
 			perror("semctl failed");
 			exit(EXIT_FAILURE);
@@ -133,4 +138,32 @@ int main(int argc, char *argv[]) {
 	// set up the shared memory
 	int shmid = get_shmid((key_t)SEMAPHORE_KEY);
 	struct shared_variable_struct * shared_variables = shmat(shmid, 0, 0);
+
+	shared_variables->waiting_customers = 0;
+	shared_variables->balance = 500;
+
+	// run the given processes
+	int i = 0;
+	while (argv[1][i] != 0) {
+		switch (argv[1][i]) {
+				case 'w':
+				case 'W':
+					printf("withdraw\n");
+					break;
+
+				case 'd':
+				case 'D':
+					printf("deposit\n");
+					break;
+
+				default:
+					printf("invalid argument\n");
+					exit(EXIT_FAILURE);
+					break;
+
+		}
+		i++;
+	}
+
+	// wait for processes now
 }
