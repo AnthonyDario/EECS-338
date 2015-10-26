@@ -1,0 +1,5 @@
+Question 1:
+	The real id is the id of the user running the program while the effective ids are the ids which determine what the program can access in the computer. This lets a user without access to sensative parts of a computer run a program that needs access to sensative parts of a computer. These programs can only run if their effective ids are given access to these parts. The effective ids are determined by the user who wrote the program. 
+
+Question 2:
+	None of the calculations in any of these programs are tough for the computer so they only need to use the CPU for minute amounts of times. These are CPU times are rounded to 0 since they are so small. When we loop for a while we can get the process to stay in the CPU for long enough to not show up as 0.

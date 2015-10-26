@@ -1,0 +1,14 @@
+Andrew Hennessy
+ajb200
+
+Homework #5
+22 March 2013
+
+This program implements Professor Tekin's solutions to Homework #3
+in C, using System V Semaphores and Shared Memory access.
+
+The syntax of the program is as follows:
+	./water hho
+
+This will run the program and then create two child hydrogen processes
+and one child oxygen process.

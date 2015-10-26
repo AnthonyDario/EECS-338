@@ -1,0 +1,89 @@
+Script started on Thu 17 Sep 2015 10:41:37 AM EDT
+]0;anthony@anthony-VirtualBox: ~/Documents/Operating Systemsanthony@anthony-VirtualBox:~/Documents/Operating Systems$ make
+Compilation complete
+]0;anthony@anthony-VirtualBox: ~/Documents/Operating Systemsanthony@anthony-VirtualBox:~/Documents/Operating Systems$ ./1homework.o 
+
+Child 1 has a userid of:  1000
+Child 1 has a groupid of: 1000
+Child 1 has an effective userid of:  1000
+Child 1 has an effective groupid of: 1000
+the child's user is anthony
+
+Child 2 has a userid of:  1000
+Child 2 has a groupid of: 1000
+Child 2 has an effective userid of:  1000
+Child 2 has an effective groupid of: 1000
+the child's user is anthony
+
+Child 3 has a userid of:  1000
+Child 3 has a groupid of: 1000
+Child 3 has an effective userid of:  1000
+Child 3 has an effective groupid of: 1000
+the child's user is anthony
+
+Child 4 has a userid of:  1000
+Child 4 has a groupid of: 1000
+Child 4 has an effective userid of:  1000
+Child 4 has an effective groupid of: 1000
+the child's user is anthony
+
+(n(n-2)) binomial coefficient computations of integers n = 2 ... 10, start now!
+
+The second process: 2766 produced the binomial coefficient  1 for integers  2, 0
+The  third process: 2767 produced the binomial coefficient  3 for integers  3, 1
+The second process: 2766 produced the binomial coefficient  6 for integers  4, 2
+The  third process: 2767 produced the binomial coefficient 10 for integers  5, 3
+The second process: 2766 produced the binomial coefficient 15 for integers  6, 4
+The  third process: 2767 produced the binomial coefficient 21 for integers  7, 5
+The second process: 2766 produced the binomial coefficient 28 for integers  8, 6
+The  third process: 2767 produced the binomial coefficient 36 for integers  9, 7
+The second process: 2766 produced the binomial coefficient 45 for integers 10, 8
+child 1 had a user time of:  0.000022 seconds
+and it had a system time of: 0.000000 seconds
+
+child 2 had a user time of:  0.000024 seconds
+and it had a system time of: 0.000000 seconds
+
+child 3 had a user time of:  0.000023 seconds
+and it had a system time of: 0.000000 seconds
+
+
+the fourth process is now executing ls -l
+
+child 4 had a user time of:  0.000023 seconds
+and it had a system time of: 0.000000 seconds
+
+total 36
+-rw-rw-r-- 1 anthony anthony  4797 Sep 16 16:43 1homework.c
+-rwxrwxr-x 1 anthony anthony 13897 Sep 17 10:41 1homework.o
+-rw-rw-r-- 1 anthony anthony   767 Sep 16 16:09 answers.txt
+-rw-rw-r-- 1 anthony anthony   114 Sep 17 10:39 ard74@eecslinab2.case.edu
+-rw-rw-r-- 1 anthony anthony   114 Sep 17 10:36 Makefile
+-rw-rw-r-- 1 anthony anthony     0 Sep 17 10:41 typescript
+
+Child: 0 had process id: 2765 and finished with termination status: 0
+	it took 15.000000 seconds to execute
+	it ended Thu Sep 17 10:41:58 2015
+
+Child: 1 had process id: 2766 and finished with termination status: 0
+	it took 16.000000 seconds to execute
+	it ended Thu Sep 17 10:41:59 2015
+
+Child: 2 had process id: 2767 and finished with termination status: 0
+	it took 17.000000 seconds to execute
+	it ended Thu Sep 17 10:42:00 2015
+
+Child: 3 had process id: 2768 and finished with termination status: 0
+	it took 18.000000 seconds to execute
+	it ended Thu Sep 17 10:42:01 2015
+
+the parent process had a run time of 18.000000
+	it had an end time of Thu Sep 17 10:42:01 2015
+	the user is anthony
+	its real user is id: 1000
+	its real groupid is: 1000
+	its effective user id: is  1000
+	its effective group id: is 1000
+
+]0;anthony@anthony-VirtualBox: ~/Documents/Operating Systemsanthony@anthony-VirtualBox:~/Documents/Operating Systems$ exit
+Script done on Thu 17 Sep 2015 10:42:06 AM EDT
