@@ -17,10 +17,14 @@
 // a semaphore key
 #define SEMAPHORE_KEY 0xFA2B
 
-// semaphores positions in the array
+// semaphores positions in the semaphore array
 #define SEMAPHORE_MUTEX			0
 #define SEMAPHORE_WAITING		1
 #define NUMBER_OF_SEMAPHORES	2
+
+// constants to identify a withdrawer or depositor
+#define WITHDRAWER 0
+#define DEPOSITOR  1
 
 // required by semctl(2)
 union semun {
@@ -96,6 +100,9 @@ void depositor(void) {
 	printf("depositor waiting for mutex\n");
 	semaphore_wait(semid, SEMAPHORE_MUTEX);
 	printf("depositor done with mutex\n");
+	semaphore_signal(semid, SEMAPHORE_MUTEX);
+
+	exit(EXIT_SUCCESS);
 }
 
 // the withdrawing customer
@@ -109,6 +116,34 @@ void withdrawer(void) {
 	printf("withdrawer waiting for mutex\n");
 	semaphore_wait(semid, SEMAPHORE_MUTEX);
 	printf("withdrawer done with mutex\n");
+	semaphore_signal(semid, SEMAPHORE_MUTEX);
+
+	exit(EXIT_SUCCESS);
+}
+
+// fork a withdrawer(0) or depositor(1)
+void bank_fork(int customer_type) {
+
+	pid_t child_pid = fork();
+
+	if (child_pid == -1) {
+		perror("Fork failed");
+		exit(EXIT_FAILURE);
+	}
+	else if (child_pid == 0) {
+		// the child runs whichever process it is
+		if (customer_type = WITHDRAWER) {
+			withdrawer();
+		} else if (customer_type = DEPOSITOR) {
+			depositor();
+		} else {
+			printf("Invalid customer_type");
+			exit(EXIT_FAILURE);
+		}
+	} else {
+		// The parent process does nothing
+		return;
+	}
 
 }
 
@@ -148,12 +183,12 @@ int main(int argc, char *argv[]) {
 		switch (argv[1][i]) {
 				case 'w':
 				case 'W':
-					printf("withdraw\n");
+					bank_fork(WITHDRAWER);
 					break;
 
 				case 'd':
 				case 'D':
-					printf("deposit\n");
+					bank_fork(DEPOSITOR);
 					break;
 
 				default:
@@ -166,4 +201,34 @@ int main(int argc, char *argv[]) {
 	}
 
 	// wait for processes now
+	int j = 0;
+	while (j < i) {
+		wait(NULL);
+		printf("parent waited for child %d of %d\n", j, i - 1);
+		j++;
+	}
+
+	// clean up all semaphores
+
+	if (shmdt(shared_variables) == -1) {
+		perror("shmdt failed");
+		exit(EXIT_FAILURE);
+	}
+
+	if (shmctl(shmid, IPC_RMID, NULL) < 0) {
+		perror("shmctrl failed");
+		exit(EXIT_FAILURE);
+	}
+
+	if (semctl(semid,
+			   SEMAPHORE_MUTEX,
+			   IPC_RMID,
+			   semaphore_values
+			  ) == -1) {
+		perror("semctl failed");
+		exit(EXIT_FAILURE);
+	}
+
+	exit(EXIT_SUCCESS);
+
 }
