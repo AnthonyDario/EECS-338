@@ -35,6 +35,22 @@ struct node* remove_front(struct node * root) {
 	return new_root;
 }
 
+// frees all the memory in the list
+void destroy_list(struct node * root) {
+
+	struct node * current_node = root;
+	struct node * next_node = root->next;
+
+	while (next_node != 0) { 
+		free(current_node);
+		current_node = next_node;
+		next_node = current_node->next;
+	}
+
+	free(current_node);
+
+}
+
 int main(int argc, char *argv[]) {
 
 	/*
@@ -70,6 +86,7 @@ int main(int argc, char *argv[]) {
 		current_node = current_node->next;
 	}
 
+	destroy_list(root);
 	*/
 
 }
