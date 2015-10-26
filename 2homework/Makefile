@@ -1,12 +1,13 @@
 COMPILER = gcc
-SOURCE = account.c
-OUTPUT = account.o
 
-# compile our stuff 
+# compile our stuff
 all:
-	@$(COMPILER) -o $(OUTPUT) $(SOURCE)
-	@chmod 700 $(OUTPUT) 
+	@$(COMPILER) -o account.o account.c
+	@$(COMPILER) -o linkedlist.o linkedlist.c
+	@chmod 700 account.o
+	@chmod 700 linkedlist.o
 
 # remove unecessary files
 clean:
-	@rm -f $(OUTPUT)
+	@rm -f account.o
+	@rm -f linedlist.o
