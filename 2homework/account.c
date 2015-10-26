@@ -132,9 +132,9 @@ void bank_fork(int customer_type) {
 	}
 	else if (child_pid == 0) {
 		// the child runs whichever process it is
-		if (customer_type = WITHDRAWER) {
+		if (customer_type == WITHDRAWER) {
 			withdrawer();
-		} else if (customer_type = DEPOSITOR) {
+		} else if (customer_type == DEPOSITOR) {
 			depositor();
 		} else {
 			printf("Invalid customer_type");
@@ -229,6 +229,8 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
+
+	printf("\nparent is done\n");
 	exit(EXIT_SUCCESS);
 
 }
