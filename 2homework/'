@@ -43,7 +43,6 @@ struct shared_variable_struct {
 	struct node * waiting_withdrawers;
 };
 
-
 // gets the semaphore key
 int get_semid(key_t semkey) {
 	int id = semget(semkey, NUMBER_OF_SEMAPHORES, 0777 | IPC_CREAT);
@@ -109,15 +108,11 @@ void depositor(int deposit) {
 	// increase the balance
 	shared_variables->balance += deposit;
 
-	printf("\ndepositor: %d\n", getpid());
+	printf("depositor: %d\n", getpid());
 	printf("\tdeposited: %d\n", deposit);
-	printf("\tcurrent balance: %d\n",
-		   shared_variables->balance);
-	printf("\twaiting withdrawers: %d\n\n",
-		   shared_variables->num_waiting_withdrawers
+	printf("\tcurrent balance: %d\n", 
+		   shared_variables->balance
 		  );
-
-	printf("\tnext withdrawal: %d\n\n", shared_variables->waiting_withdrawers->value);
 
 	// if no withdrawels then signal the mutex
 	if (shared_variables->num_waiting_withdrawers == 0) {
@@ -156,12 +151,10 @@ void withdrawer(withdrawal) {
 
 		shared_variables->balance -= withdrawal;
 
-		printf("\nwithdrawer: %d\n", getpid());
+		printf("withdrawer: %d\n", getpid());
 		printf("\twithdrew: %d\n", withdrawal);
-		printf("\tcurrent balance: %d\n",
-			   shared_variables->balance);
-		printf("\twaiting withdrawers: %d\n\n",
-			   shared_variables->num_waiting_withdrawers
+		printf("\tcurrent balance: %d\n", 
+			   shared_variables->balance
 			  );
 
 		semaphore_signal(semid, MUTEX);
@@ -169,18 +162,7 @@ void withdrawer(withdrawal) {
 	// else we wait
 	else {
 		shared_variables->num_waiting_withdrawers++;
-
 		insert(withdrawal, shared_variables->waiting_withdrawers);
-		// if the list is not yet initialized the initialize it
-		if (shared_variables->waiting_withdrawers->value == -1) {
-			shared_variables->waiting_withdrawers =
-				remove_front(shared_variables->waiting_withdrawers);
-		}
-
-		printf("withdrawer: %d is waiting in a line of %d withdrawers\n",
-			   getpid(), shared_variables->num_waiting_withdrawers
-			  );
-
 		semaphore_signal(semid, MUTEX);
 		semaphore_wait(semid, WITHDRAW);
 
@@ -190,15 +172,11 @@ void withdrawer(withdrawal) {
 			remove_front(shared_variables->waiting_withdrawers);
 		shared_variables->num_waiting_withdrawers--;
 
-		printf("\nwithdrawer: %d\n", getpid());
+		printf("withdrawer: %d\n", getpid());
 		printf("\twithdrew: %d\n", withdrawal);
-		printf("\tcurrent balance: %d\n",
-			   shared_variables->balance);
-		printf("\twaiting withdrawers: %d\n\n",
-			   shared_variables->num_waiting_withdrawers
+		printf("\tcurrent balance: %d\n", 
+			   shared_variables->balance
 			  );
-
-		printf("next withdrawal: %d\n", shared_variables->waiting_withdrawers->value);
 
 		// let the next withdrawer go if it can
 		if (shared_variables->num_waiting_withdrawers > 0 &&
@@ -219,8 +197,6 @@ void withdrawer(withdrawal) {
 
 // fork a withdrawer(0) or depositor(1)
 void bank_fork(int customer_type, int amount) {
-
-	sleep(1);
 
 	pid_t child_pid = fork();
 
@@ -276,7 +252,6 @@ int main(int argc, char *argv[]) {
 	shared_variables->balance = 500;
 	shared_variables->waiting_withdrawers =
 		(struct node *) malloc(sizeof(struct node));
-	shared_variables->waiting_withdrawers->value = -1;
 
 	// run the given processes
 	int i = 1;

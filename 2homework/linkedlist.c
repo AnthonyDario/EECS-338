@@ -31,6 +31,7 @@ struct node* insert(int value, struct node * root) {
 struct node* remove_front(struct node * root) {
 
 	struct node * new_root = root->next;
+	printf("old value: %d\n new value: %d\n", root->value, new_root->value);
 	free(root);
 	return new_root;
 }
