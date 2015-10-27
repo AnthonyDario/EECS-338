@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "linkedlist.h"
 
 // a semaphore key
 #define SEMAPHORE_KEY 0xFA2B
@@ -97,9 +98,9 @@ void depositor(void) {
 	int shmid = get_shmid((key_t)SEMAPHORE_KEY);
 	struct shared_variable_struct * shared_variables = shmat(shmid, 0, 0);
 
-	printf("depositor waiting for mutex\n");
+	printf("depositor: %d waiting for mutex\n", getpid());
 	semaphore_wait(semid, SEMAPHORE_MUTEX);
-	printf("depositor done with mutex\n");
+	printf("depositor: %d done with mutex\n", getpid());
 	semaphore_signal(semid, SEMAPHORE_MUTEX);
 
 	exit(EXIT_SUCCESS);

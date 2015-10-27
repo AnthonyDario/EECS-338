@@ -10,4 +10,4 @@ all:
 # remove unecessary files
 clean:
 	@rm -f account.o
-	@rm -f linedlist.o
+	@rm -f linkedlist.o
