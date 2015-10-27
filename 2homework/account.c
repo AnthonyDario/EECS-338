@@ -181,6 +181,7 @@ void withdrawer(withdrawal) {
 			   getpid(), shared_variables->num_waiting_withdrawers
 			  );
 
+		printf("next withdrawal: %d\n\n", shared_variables->waiting_withdrawers->value);
 		semaphore_signal(semid, MUTEX);
 		semaphore_wait(semid, WITHDRAW);
 
