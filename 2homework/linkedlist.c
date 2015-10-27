@@ -51,9 +51,9 @@ void destroy_list(struct node * root) {
 
 }
 
+/*
 int main(int argc, char *argv[]) {
 
-	/*
 	struct node * root;
 
 	root = (struct node *) malloc(sizeof(struct node));
@@ -87,6 +87,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	destroy_list(root);
-	*/
 
 }
+*/
