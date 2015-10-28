@@ -1,0 +1,78 @@
+Script started on Wed 28 Oct 2015 04:08:55 PM EDT
+]0;anthony@anthony-VirtualBox: ~/Documents/Operating Systems/2homeworkanthony@anthony-VirtualBox:~/Documents/Operating Systems/2homework$ clearvim typescript ./account.o 500 w 100 w 500 w 300 d 200 w 300 d 600
+
+main process: 4122
+initial balance is: 500
+
+I, 4123 am going to withdraw 100
+
+withdrawer: 4123
+	withdrew: 100
+	current balance: 400
+	waiting withdrawers: 0
+
+I, 4124 am going to withdraw 500
+withdrawer: 4124 is waiting in a line of 1 withdrawers
+next withdrawal: 500
+
+I, 4125 am going to withdraw 300
+withdrawer: 4125 is waiting in a line of 2 withdrawers
+next withdrawal: 500
+
+I, 4126 am going to deposit 200
+
+depositor: 4126
+	deposited: 200
+	current balance: 600
+	waiting withdrawers: 2
+
+	next withdrawal: 500
+
+
+withdrawer: 4124
+	withdrew: 500
+	current balance: 100
+	waiting withdrawers: 1
+
+next withdrawal: 300
+I, 4127 am going to withdraw 300
+withdrawer: 4127 is waiting in a line of 2 withdrawers
+next withdrawal: 300
+
+I, 4128 am going to deposit 600
+
+depositor: 4128
+	deposited: 600
+	current balance: 700
+	waiting withdrawers: 2
+
+	next withdrawal: 300
+
+parent waited for child 0 of 6
+parent waited for child 1 of 6
+parent waited for child 2 of 6
+parent waited for child 3 of 6
+
+withdrawer: 4125
+	withdrew: 300
+	current balance: 400
+	waiting withdrawers: 1
+
+next withdrawal: 300
+parent waited for child 4 of 6
+
+withdrawer: 4127
+	withdrew: 300
+	current balance: 100
+	waiting withdrawers: 0
+
+next withdrawal: 0
+parent waited for child 5 of 6
+parent waited for child 6 of 6
+
+parent is done
+]0;anthony@anthony-VirtualBox: ~/Documents/Operating Systems/2homeworkanthony@anthony-VirtualBox:~/Documents/Operating Systems/2homework$ quit()
+> ;
+bash: syntax error near unexpected token `;'
+]0;anthony@anthony-VirtualBox: ~/Documents/Operating Systems/2homeworkanthony@anthony-VirtualBox:~/Documents/Operating Systems/2homework$ exit
+Script done on Wed 28 Oct 2015 04:09:23 PM EDT

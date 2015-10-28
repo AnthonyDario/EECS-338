@@ -127,9 +127,8 @@ void depositor(int deposit, int shmid) {
 	struct shared_variable_struct * shared_variables =
 		shmat(shmid, 0, 0);
 
-	printf("depositor: %d waiting for mutex\n", getpid());
+	// wait for the mutex
 	semaphore_wait(semid, MUTEX);
-	printf("depositor: %d in mutex\n", getpid());
 
 	// increase the balance
 	shared_variables->balance += deposit;
@@ -150,7 +149,7 @@ void depositor(int deposit, int shmid) {
 		semaphore_signal(semid, MUTEX);
 	}
 	// if we still don't have enough to withdraw don't withdraw
-	else if (shared_variables->waiting[shared_variables->front] >
+	else if (shared_variables->waiting[shared_variables->front] >=
 			 shared_variables->balance) {
 		semaphore_signal(semid, MUTEX);
 	}
@@ -171,9 +170,8 @@ void withdrawer(int withdrawal, int shmid) {
 	struct shared_variable_struct * shared_variables =
 		shmat(shmid, 0, 0);
 
-	printf("withdrawer: %d waiting for mutex\n", getpid());
+	// wait for the mutex
 	semaphore_wait(semid, MUTEX);
-	printf("withdrawer: %d in mutex\n", getpid());
 
 	// if enough balance then withdraw and we are first
 	if (shared_variables->num_waiting_withdrawers == 0 &&
@@ -193,7 +191,6 @@ void withdrawer(int withdrawal, int shmid) {
 	}
 	// else we wait
 	else {
-		shared_variables->num_waiting_withdrawers++;
 
 		// wait in line
 		wait_in_line(withdrawal, shared_variables);
@@ -206,6 +203,7 @@ void withdrawer(int withdrawal, int shmid) {
 			   shared_variables->waiting[shared_variables->front]);
 		semaphore_signal(semid, MUTEX);
 		semaphore_wait(semid, WITHDRAW);
+		sleep(1);
 
 		// we have been signaled! take our money and run!
 		shared_variables->balance -= withdrawal;
@@ -225,7 +223,7 @@ void withdrawer(int withdrawal, int shmid) {
 
 		// let the next withdrawer go if it can
 		if (shared_variables->num_waiting_withdrawers > 0 &&
-			shared_variables->waiting[shared_variables->front] <
+			shared_variables->waiting[shared_variables->front] <=
 			shared_variables->balance) {
 
 			semaphore_signal(semid, WITHDRAW);
