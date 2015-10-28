@@ -58,9 +58,10 @@ int get_semid(key_t semkey) {
 }
 
 // gets the shared memory id
-int get_shmid(key_t shmkey) {
+int get_shmid(key_t shmkey, int array_length) {
 	int id = shmget(shmkey,
-					sizeof(struct shared_variable_struct),
+					sizeof(struct shared_variable_struct) +
+					sizeof(int) * array_length,
 					0777 | IPC_CREAT
 				    );
 
@@ -95,13 +96,35 @@ void semaphore_signal(int semid, int semnumber) {
 		}
 }
 
+
+// add a withdrawal to the end of the line
+void wait_in_line(int withdrawal,
+				  struct shared_variable_struct * variables) {
+	variables->waiting[variables->back] = withdrawal;
+	variables->back++;
+	if (variables->back >= variables->waiting_length) {
+		variables->back = 0;
+	}
+	variables->num_waiting_withdrawers++;
+}
+
+// moves the front pointer forward
+void leave_line(struct shared_variable_struct * variables) {
+	variables->front++;
+	if (variables->front >= variables->waiting_length) {
+		variables->front = 0;
+	}
+	variables->num_waiting_withdrawers--;
+}
+
+// remove a withdrawal from the end of the line
+
 // the depositing customer
-void depositor(int deposit) {
+void depositor(int deposit, int shmid) {
 
 	// set up shared memory
 	printf("I, %d am going to deposit %d\n", getpid(), deposit);
 	int semid = get_semid((key_t) KEY);
-	int shmid = get_shmid((key_t) KEY);
 	struct shared_variable_struct * shared_variables =
 		shmat(shmid, 0, 0);
 
@@ -140,35 +163,12 @@ void depositor(int deposit) {
 	exit(EXIT_SUCCESS);
 }
 
-// add a withdrawal to the end of the line
-void wait_in_line(int withdrawal,
-				  struct shared_variable_struct * variables) {
-	variables->waiting[variables->back] = withdrawal;
-	variables->back++;
-	if (variables->back >= variables->waiting_length) {
-		variables->back = 0;
-	}
-	variables->num_waiting_withdrawers++;
-}
-
-// moves the front pointer forward
-void leave_line(struct shared_variable_struct * variables) {
-	variables->front++;
-	if (variables->front >= variables->waiting_length) {
-		variables->front = 0;
-	}
-	variables->num_waiting_withdrawers--;
-}
-
-// remove a withdrawal from the end of the line
-
 // the withdrawing customer
-void withdrawer(withdrawal) {
+void withdrawer(int withdrawal, int shmid) {
 
 	// set up shared memory
 	printf("I, %d am going to withdraw %d\n", getpid(), withdrawal);
 	int semid = get_semid((key_t) KEY);
-	int shmid = get_shmid((key_t) KEY);
 	struct shared_variable_struct * shared_variables =
 		shmat(shmid, 0, 0);
 
@@ -242,7 +242,7 @@ void withdrawer(withdrawal) {
 }
 
 // fork a withdrawer(0) or depositor(1)
-void bank_fork(int customer_type, int amount) {
+void bank_fork(int customer_type, int amount, int shmid) {
 
 	sleep(1);
 
@@ -255,9 +255,9 @@ void bank_fork(int customer_type, int amount) {
 	else if (child_pid == 0) {
 		// the child runs whichever process it is
 		if (customer_type == WITHDRAWER) {
-			withdrawer(amount);
+			withdrawer(amount, shmid);
 		} else if (customer_type == DEPOSITOR) {
-			depositor(amount);
+			depositor(amount, shmid);
 		} else {
 			printf("Invalid customer_type");
 			exit(EXIT_FAILURE);
@@ -293,12 +293,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	// set up the shared memory
-	int shmid = get_shmid((key_t) KEY);
+	int shmid = get_shmid((key_t) KEY, argc);
 	struct shared_variable_struct * shared_variables = shmat(shmid, 0, 0);
 
 	shared_variables->num_waiting_withdrawers = 0;
 	shared_variables->balance = 500;
-	shared_variables->waiting = (int *) malloc(sizeof(int) * argc);
 	shared_variables->waiting_length = argc;
 	shared_variables->front = 1;
 	shared_variables->back = 1;
@@ -309,12 +308,12 @@ int main(int argc, char *argv[]) {
 		switch (argv[i][0]) {
 				case 'w':
 				case 'W':
-					bank_fork(WITHDRAWER, atoi(argv[i + 1]));
+					bank_fork(WITHDRAWER, atoi(argv[i + 1]), shmid);
 					break;
 
 				case 'd':
 				case 'D':
-					bank_fork(DEPOSITOR, atoi(argv[i + 1]));
+					bank_fork(DEPOSITOR, atoi(argv[i + 1]), shmid);
 					break;
 
 				default:
