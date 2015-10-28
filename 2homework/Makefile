@@ -2,6 +2,7 @@ COMPILER = gcc
 
 # compile our stuff
 all:
+	@clear
 	@$(COMPILER) -o account.o account.c linkedlist.c
 	@chmod 700 account.o
 

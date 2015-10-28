@@ -40,7 +40,10 @@ union semun {
 struct shared_variable_struct {
 	int num_waiting_withdrawers;
 	int balance;
-	struct node * waiting_withdrawers;
+	int front;
+	int back;
+	int waiting_length;
+	int waiting [];
 };
 
 
@@ -117,14 +120,15 @@ void depositor(int deposit) {
 		   shared_variables->num_waiting_withdrawers
 		  );
 
-	printf("\tnext withdrawal: %d\n\n", shared_variables->waiting_withdrawers->value);
+	printf("\tnext withdrawal: %d\n\n",
+		   shared_variables->waiting[shared_variables->front]);
 
 	// if no withdrawels then signal the mutex
 	if (shared_variables->num_waiting_withdrawers == 0) {
 		semaphore_signal(semid, MUTEX);
 	}
 	// if we still don't have enough to withdraw don't withdraw
-	else if (shared_variables->waiting_withdrawers->value > 
+	else if (shared_variables->waiting[shared_variables->front] >
 			 shared_variables->balance) {
 		semaphore_signal(semid, MUTEX);
 	}
@@ -135,6 +139,28 @@ void depositor(int deposit) {
 
 	exit(EXIT_SUCCESS);
 }
+
+// add a withdrawal to the end of the line
+void wait_in_line(int withdrawal,
+				  struct shared_variable_struct * variables) {
+	variables->waiting[variables->back] = withdrawal;
+	variables->back++;
+	if (variables->back >= variables->waiting_length) {
+		variables->back = 0;
+	}
+	variables->num_waiting_withdrawers++;
+}
+
+// moves the front pointer forward
+void leave_line(struct shared_variable_struct * variables) {
+	variables->front++;
+	if (variables->front >= variables->waiting_length) {
+		variables->front = 0;
+	}
+	variables->num_waiting_withdrawers--;
+}
+
+// remove a withdrawal from the end of the line
 
 // the withdrawing customer
 void withdrawer(withdrawal) {
@@ -170,26 +196,23 @@ void withdrawer(withdrawal) {
 	else {
 		shared_variables->num_waiting_withdrawers++;
 
-		insert(withdrawal, shared_variables->waiting_withdrawers);
-		// if the list is not yet initialized the initialize it
-		if (shared_variables->waiting_withdrawers->value == -1) {
-			shared_variables->waiting_withdrawers =
-				remove_front(shared_variables->waiting_withdrawers);
-		}
+		// wait in line
+		wait_in_line(withdrawal, shared_variables);
 
 		printf("withdrawer: %d is waiting in a line of %d withdrawers\n",
 			   getpid(), shared_variables->num_waiting_withdrawers
 			  );
 
-		printf("next withdrawal: %d\n\n", shared_variables->waiting_withdrawers->value);
+		printf("next withdrawal: %d\n\n", 
+			   shared_variables->waiting[shared_variables->front]);
 		semaphore_signal(semid, MUTEX);
 		semaphore_wait(semid, WITHDRAW);
 
 		// we have been signaled! take our money and run!
 		shared_variables->balance -= withdrawal;
-		shared_variables->waiting_withdrawers =
-			remove_front(shared_variables->waiting_withdrawers);
-		shared_variables->num_waiting_withdrawers--;
+		// leave line
+		leave_line(shared_variables);
+
 
 		printf("\nwithdrawer: %d\n", getpid());
 		printf("\twithdrew: %d\n", withdrawal);
@@ -199,11 +222,11 @@ void withdrawer(withdrawal) {
 			   shared_variables->num_waiting_withdrawers
 			  );
 
-		printf("next withdrawal: %d\n", shared_variables->waiting_withdrawers->value);
+		printf("next withdrawal: %d\n", shared_variables->waiting[shared_variables->front]);
 
 		// let the next withdrawer go if it can
 		if (shared_variables->num_waiting_withdrawers > 0 &&
-			shared_variables->waiting_withdrawers->value <
+			shared_variables->waiting[shared_variables->front] <
 			shared_variables->balance) {
 
 
@@ -258,7 +281,7 @@ int main(int argc, char *argv[]) {
 	// create the semaphores
 	union semun semaphore_values;
 
-	unsigned short  semaphore_init_values[NUMBER_OF_SEMAPHORES];
+	unsigned short semaphore_init_values[NUMBER_OF_SEMAPHORES];
 	semaphore_init_values[MUTEX]   = 1;
 	semaphore_init_values[WITHDRAW] = 0;
 	semaphore_values.array = semaphore_init_values;
@@ -275,9 +298,10 @@ int main(int argc, char *argv[]) {
 
 	shared_variables->num_waiting_withdrawers = 0;
 	shared_variables->balance = 500;
-	shared_variables->waiting_withdrawers =
-		(struct node *) malloc(sizeof(struct node));
-	shared_variables->waiting_withdrawers->value = -1;
+	shared_variables->waiting = (int *) malloc(sizeof(int) * argc);
+	shared_variables->waiting_length = argc;
+	shared_variables->front = 1;
+	shared_variables->back = 1;
 
 	// run the given processes
 	int i = 1;
@@ -311,10 +335,6 @@ int main(int argc, char *argv[]) {
 		j++;
 	}
 
-
-	// get rid of the linked list
-	destroy_list(shared_variables->waiting_withdrawers);
-
 	// get rid of shared memory
 	if (shmdt(shared_variables) == -1) {
 		perror("shmdt failed");
@@ -335,8 +355,6 @@ int main(int argc, char *argv[]) {
 		perror("semctl failed");
 		exit(EXIT_FAILURE);
 	}
-
-
 
 	printf("\nparent is done\n");
 	exit(EXIT_SUCCESS);
