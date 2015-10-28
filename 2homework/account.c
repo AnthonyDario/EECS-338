@@ -242,6 +242,8 @@ void withdrawer(int withdrawal, int shmid) {
 // fork a withdrawer(0) or depositor(1)
 void bank_fork(int customer_type, int amount, int shmid) {
 
+	sleep(1);
+
 	pid_t child_pid = fork();
 
 	if (child_pid == -1) {
