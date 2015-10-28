@@ -13,7 +13,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "linkedlist.h"
 
 // a semaphore key
 #define  KEY 0xFA2B
@@ -229,7 +228,6 @@ void withdrawer(int withdrawal, int shmid) {
 			shared_variables->waiting[shared_variables->front] <
 			shared_variables->balance) {
 
-
 			semaphore_signal(semid, WITHDRAW);
 		}
 		else {
@@ -260,21 +258,26 @@ void bank_fork(int customer_type, int amount, int shmid) {
 			printf("Invalid customer_type");
 			exit(EXIT_FAILURE);
 		}
-	} else {
-		// The parent process does nothing
-		return;
-	}
+	} 
+	// the parent process continues
 
 }
 
 int main(int argc, char *argv[]) {
 
-	printf("main process: %d\n", getpid());
-
+	// make sure there are proper arguments
 	if (argc < 2) {
 		printf("need to input withdrawers and inserters\n");
+		printf("the format is <Ww><Dd> <#> ...\n");
+		printf("with W and D representing withdrawers and depositors\n");
+		printf("the number following the W and D is the amount to be\n");
+		printf("withdrawn or deposited\n");
+		printf("The very first argument is the initial balance\n");
 		exit(EXIT_FAILURE);
 	}
+
+	printf("\nmain process: %d\n", getpid());
+	printf("initial balance is: %d\n\n", atoi(argv[1]));
 
 	// create the semaphores
 	union semun semaphore_values;
@@ -295,13 +298,13 @@ int main(int argc, char *argv[]) {
 	struct shared_variable_struct * shared_variables = shmat(shmid, 0, 0);
 
 	shared_variables->num_waiting_withdrawers = 0;
-	shared_variables->balance = 500;
+	shared_variables->balance = atoi(argv[1]);
 	shared_variables->waiting_length = argc;
 	shared_variables->front = 1;
 	shared_variables->back = 1;
 
 	// run the given processes
-	int i = 1;
+	int i = 2;
 	while (i < argc) {
 		switch (argv[i][0]) {
 				case 'w':
