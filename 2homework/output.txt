@@ -1,0 +1,107 @@
+
+main process: 3781
+initial balance is: 500
+
+I, 3782 am going to withdraw 100
+withdrawer: 3782 waiting for mutex
+withdrawer: 3782 in mutex
+
+withdrawer: 3782
+	withdrew: 100
+	current balance: 400
+	waiting withdrawers: 0
+
+
+main process: 3781
+initial balance is: 500
+
+I, 3783 am going to withdraw 500
+withdrawer: 3783 waiting for mutex
+withdrawer: 3783 in mutex
+withdrawer: 3783 is waiting in a line of 2 withdrawers
+next withdrawal: 500
+
+
+withdrawer: 3783
+	withdrew: 500
+	current balance: 100
+	waiting withdrawers: 3
+
+next withdrawal: 300
+
+main process: 3781
+initial balance is: 500
+
+I, 3785 am going to deposit 200
+depositor: 3785 waiting for mutex
+depositor: 3785 in mutex
+
+depositor: 3785
+	deposited: 200
+	current balance: 600
+	waiting withdrawers: 4
+
+	next withdrawal: 500
+
+
+main process: 3781
+initial balance is: 500
+
+I, 3784 am going to withdraw 300
+withdrawer: 3784 waiting for mutex
+withdrawer: 3784 in mutex
+withdrawer: 3784 is waiting in a line of 4 withdrawers
+next withdrawal: 500
+
+
+withdrawer: 3784
+	withdrew: 300
+	current balance: 400
+	waiting withdrawers: 4
+
+next withdrawal: 300
+
+main process: 3781
+initial balance is: 500
+
+I, 3786 am going to withdraw 300
+withdrawer: 3786 waiting for mutex
+withdrawer: 3786 in mutex
+withdrawer: 3786 is waiting in a line of 5 withdrawers
+next withdrawal: 300
+
+
+withdrawer: 3786
+	withdrew: 300
+	current balance: 100
+	waiting withdrawers: 3
+
+next withdrawal: 0
+
+main process: 3781
+initial balance is: 500
+
+I, 3787 am going to deposit 600
+depositor: 3787 waiting for mutex
+depositor: 3787 in mutex
+
+depositor: 3787
+	deposited: 600
+	current balance: 700
+	waiting withdrawers: 5
+
+	next withdrawal: 300
+
+
+main process: 3781
+initial balance is: 500
+
+parent waited for child 0 of 6
+parent waited for child 1 of 6
+parent waited for child 2 of 6
+parent waited for child 3 of 6
+parent waited for child 4 of 6
+parent waited for child 5 of 6
+parent waited for child 6 of 6
+
+parent is done
