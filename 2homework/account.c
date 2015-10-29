@@ -28,11 +28,10 @@
 
 // required by semctl(2)
 union semun {
-	int				val;	 /* Value for SETVAL */
+	int val;		 /* Value for SETVAL */
 	struct semid_ds	*buf;	 /* Buffer for IPC_STAT, IPC_SET */
 	unsigned short	*array;  /* Array for GETALL, SETALL */
-	struct seminfo	*__buf;  /* Buffer for IPC_INFO
-							    (linux-specific) */
+	struct seminfo	*__buf;  /* Buffer for IPC_INFO */
 };
 
 // variables that will be shared across processes
@@ -48,7 +47,7 @@ struct shared_variable_struct {
 
 // gets the semaphore key
 int get_semid(key_t semkey) {
-	int id = semget(semkey, NUMBER_OF_SEMAPHORES, 0777 | IPC_CREAT);
+	int id = semget(semkey, NUMBER_OF_SEMAPHORES, 0666);
 	if (id == -1) {
 		perror("semget failed");
 		exit(EXIT_FAILURE);
@@ -61,7 +60,7 @@ int get_shmid(key_t shmkey, int array_length) {
 	int id = shmget(shmkey,
 					sizeof(struct shared_variable_struct) +
 					sizeof(int) * array_length,
-					0777 | IPC_CREAT
+					0666
 				    );
 
 	if (id == -1) {
@@ -72,24 +71,24 @@ int get_shmid(key_t shmkey, int array_length) {
 }
 
 // performs a wait on the specified semaphore
-void semaphore_wait(int semid, int semnumber) {
+void semaphore_wait(int sem_id, int sem_number) {
 		struct sembuf wait_buffer;
-		wait_buffer.sem_num = semnumber;
+		wait_buffer.sem_num = sem_number;
 		wait_buffer.sem_op = -1;
 		wait_buffer.sem_flg = 0;
-		if (semop(semid, &wait_buffer, 1) == -1){
+		if (semop(sem_id, &wait_buffer, 1) == -1){
 			perror(" wait failed");
 			exit(EXIT_FAILURE);
 		}
 }
 
 // performs a wait on the specified semaphore
-void semaphore_signal(int semid, int semnumber) {
+void semaphore_signal(int sem_id, int sem_number) {
 		struct sembuf signal_buffer;
-		signal_buffer.sem_num = semnumber;
+		signal_buffer.sem_num = sem_number;
 		signal_buffer.sem_op = 1;
 		signal_buffer.sem_flg = 0;
-		if (semop(semid, &signal_buffer, 1) == -1){
+		if (semop(sem_id, &signal_buffer, 1) == -1){
 			perror(" signal failed");
 			exit(EXIT_FAILURE);
 		}
@@ -119,11 +118,10 @@ void leave_line(struct shared_variable_struct * variables) {
 // remove a withdrawal from the end of the line
 
 // the depositing customer
-void depositor(int deposit, int shmid) {
+void depositor(int deposit, int shmid, int semid) {
 
 	// set up shared memory
 	printf("I, %d am going to deposit %d\n", getpid(), deposit);
-	int semid = get_semid((key_t) KEY);
 	struct shared_variable_struct * shared_variables =
 		shmat(shmid, 0, 0);
 
@@ -162,11 +160,10 @@ void depositor(int deposit, int shmid) {
 }
 
 // the withdrawing customer
-void withdrawer(int withdrawal, int shmid) {
+void withdrawer(int withdrawal, int shmid, int semid) {
 
 	// set up shared memory
 	printf("I, %d am going to withdraw %d\n", getpid(), withdrawal);
-	int semid = get_semid((key_t) KEY);
 	struct shared_variable_struct * shared_variables =
 		shmat(shmid, 0, 0);
 
@@ -238,7 +235,7 @@ void withdrawer(int withdrawal, int shmid) {
 }
 
 // fork a withdrawer(0) or depositor(1)
-void bank_fork(int customer_type, int amount, int shmid) {
+void bank_fork(int customer_type, int amount, int shmid, int semid) {
 
 	sleep(1);
 
@@ -251,9 +248,9 @@ void bank_fork(int customer_type, int amount, int shmid) {
 	else if (child_pid == 0) {
 		// the child runs whichever process it is
 		if (customer_type == WITHDRAWER) {
-			withdrawer(amount, shmid);
+			withdrawer(amount, shmid, semid);
 		} else if (customer_type == DEPOSITOR) {
-			depositor(amount, shmid);
+			depositor(amount, shmid, semid);
 		} else {
 			printf("Invalid customer_type");
 			exit(EXIT_FAILURE);
@@ -283,18 +280,19 @@ int main(int argc, char *argv[]) {
 	union semun semaphore_values;
 
 	unsigned short semaphore_init_values[NUMBER_OF_SEMAPHORES];
-	semaphore_init_values[MUTEX]   = 1;
+	semaphore_init_values[MUTEX]    = 1;
 	semaphore_init_values[WITHDRAW] = 0;
 	semaphore_values.array = semaphore_init_values;
 
-	int semid = get_semid((key_t) KEY);
-	if (semctl(semid,MUTEX, SETALL, semaphore_values) == -1) {
-			perror("semctl failed");
-			exit(EXIT_FAILURE);
+	int semid = get_semid((key_t) IPC_PRIVATE);
+
+	if (semctl(semid, MUTEX, SETALL, semaphore_values) == -1) {
+		perror("semctl failed");
+		exit(EXIT_FAILURE);
 	}
 
 	// set up the shared memory
-	int shmid = get_shmid((key_t) KEY, argc);
+	int shmid = get_shmid((key_t) IPC_PRIVATE, argc);
 	struct shared_variable_struct * shared_variables = shmat(shmid, 0, 0);
 
 	shared_variables->num_waiting_withdrawers = 0;
@@ -307,20 +305,20 @@ int main(int argc, char *argv[]) {
 	int i = 2;
 	while (i < argc) {
 		switch (argv[i][0]) {
-				case 'w':
-				case 'W':
-					bank_fork(WITHDRAWER, atoi(argv[i + 1]), shmid);
-					break;
+			case 'w':
+			case 'W':
+				bank_fork(WITHDRAWER, atoi(argv[i + 1]), shmid, semid);
+				break;
 
-				case 'd':
-				case 'D':
-					bank_fork(DEPOSITOR, atoi(argv[i + 1]), shmid);
-					break;
+			case 'd':
+			case 'D':
+				bank_fork(DEPOSITOR, atoi(argv[i + 1]), shmid, semid);
+				break;
 
-				default:
-					printf("invalid argument\n");
-					exit(EXIT_FAILURE);
-					break;
+			default:
+				printf("invalid argument\n");
+				exit(EXIT_FAILURE);
+				break;
 
 		}
 		i += 2;
