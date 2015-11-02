@@ -30,30 +30,38 @@ void signal_sem(sem_t *sem) {
 }
 
 // a writer process
-void writer(int tid) {
+void *writer(int tid) {
 
 	printf("writer: %d is waiting for 'write'\n", tid);
+	fflush(stdout);
 	wait_sem(&writing);
 
 	printf("writer: %d is signaling 'write'\n", tid);
+	fflush(stdout);
 	signal_sem(&writing);
 
+	pthread_exit(NULL);
 }
 
 // a reader process
-void reader(int tid) {
+void *reader(int tid) {
 
 	printf("reader: %d is waiting for 'mutex'\n", tid);
+	fflush(stdout);
 	wait_sem(&mutex);
 
 		read_count++;
 		if (read_count == 1) {
 			printf("reader: %d is waiting for 'write'\n", tid);
+			fflush(stdout);
 			wait_sem(&writing);
 		}
 
 	printf("reader: %d is signaling 'mutex'\n", tid);
+	fflush(stdout);
 	signal_sem(&mutex);
+
+	pthread_exit(NULL);
 
 }
 
@@ -83,11 +91,20 @@ int main(int argc, char *argv[]) {
 		else {
 			thread_func = writer;
 		}
-
+		printf("creating thread: %d\n", tid);
 		if (pthread_create(&threads[i], NULL, thread_func, &tid)) {
+			fprintf(stderr, "pthread_create error\n");
 			perror("pthread_create");
-			exit(EXIT_FAILURE);
+			return EXIT_FAILURE;
 		}
 	}
+
+	for (i = 0; i < NUM_THREADS; i++) {
+		if (pthread_join(threads[i], NULL)) {
+			fprintf(stderr, "pthread_join error");
+		}
+	}
+
+	return EXIT_SUCCESS;
 
 }
