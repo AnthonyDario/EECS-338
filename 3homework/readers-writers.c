@@ -5,7 +5,7 @@
 #include <semaphore.h>
 
 // threads
-#define NUM_THREADS 200
+#define NUM_THREADS 10
 
 // semaphores
 sem_t mutex, writing;
@@ -59,5 +59,35 @@ void reader(int tid) {
 
 int main(int argc, char *argv[]) {
 
+	pthread_t threads[NUM_THREADS];
+	int i;
+	void *thread_func;
+
+	// initialize semaphores
+	if (sem_init(&mutex, 0, (unsigned int)1 < 0) ||
+		sem_init(&writing, 0, (unsigned int)1) < 0) {
+
+		perror("sem_init");
+		exit(EXIT_FAILURE);
+	}
+
+	for (i = 0; i < NUM_THREADS; i++) {
+
+		int tid = i;
+
+		// half of the threads will be readers half will be writers
+		// for now...
+		if (tid % 2 == 0) {
+			thread_func = reader;
+		}
+		else {
+			thread_func = writer;
+		}
+
+		if (pthread_create(&threads[i], NULL, thread_func, &tid)) {
+			perror("pthread_create");
+			exit(EXIT_FAILURE);
+		}
+	}
 
 }

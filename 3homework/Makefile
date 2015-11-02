@@ -9,4 +9,8 @@ all:
 
 # I hate extra files
 clean:
-	@rm -f readers-writers.o
+	@rm -f *.o
+
+# I hate typing
+test:
+	@./readers-writers.o
