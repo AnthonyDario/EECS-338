@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-// threads
+// constants
 #define NUM_THREADS 10
 
 // semaphores
@@ -12,6 +12,11 @@ sem_t mutex, writing;
 
 // variables
 int read_count;
+
+// gets a random int in the range
+int get_random() {
+	return rand() % 2;
+}
 
 // wait for a semaphore
 void wait_sem(sem_t *sem) {
@@ -79,8 +84,10 @@ int main(int argc, char *argv[]) {
 
 	int i;
 	void *thread_func;
-
 	read_count = 0;
+
+	// seed the random function
+	srand(time(NULL));
 
 	// initialize semaphores
 	if (sem_init(&mutex, 0, (unsigned int)1) < 0 ||
@@ -94,9 +101,8 @@ int main(int argc, char *argv[]) {
 
 		thread_ids[i]= i;
 
-		// half of the threads will be readers half will be writers
-		// for now...
-		if (i % 2 == 0) {
+		// randomly decide if thread is reader or writer
+		if (get_random() % 2 == 0) {
 			thread_func = reader;
 		}
 		else {
