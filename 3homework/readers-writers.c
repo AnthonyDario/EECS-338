@@ -5,7 +5,7 @@
 #include <semaphore.h>
 
 // constants
-#define NUM_THREADS 10
+#define NUM_THREADS 200
 
 // semaphores
 sem_t mutex, writing;
@@ -14,8 +14,8 @@ sem_t mutex, writing;
 int read_count;
 
 // gets a random int in the range
-int get_random() {
-	return rand() % 2;
+int get_random(int range) {
+	return rand() % range;
 }
 
 // wait for a semaphore
@@ -37,10 +37,10 @@ void signal_sem(sem_t *sem) {
 // a writer process
 void *writer(int * tid) {
 
-	printf("writer: %d is waiting for 'write'\n", *tid);
+	printf("writer: %3d is  %11s : %7s\n", *tid, "waiting for", "writing");
 	wait_sem(&writing);
 
-	printf("writer: %d is signaling 'write'\n", *tid);
+	printf("writer: %3d is  %11s : %7s\n", *tid, "signaling", "writing");
 	signal_sem(&writing);
 
 	pthread_exit(NULL);
@@ -49,29 +49,28 @@ void *writer(int * tid) {
 // a reader process
 void *reader(int *tid) {
 
-	printf("reader: %d is waiting for 'mutex'\n", *tid);
+	printf("reader: %3d is  %11s : %7s\n", *tid, "waiting for", "mutex");
 	wait_sem(&mutex);
 
 	read_count++;
 	if (read_count == 1) {
-		printf("reader: %d is waiting for 'write'\n", *tid);
+		printf("reader: %3d is  %11s : %7s\n", *tid, "waiting for", "writing");
 		wait_sem(&writing);
 	}
 
 	signal_sem(&mutex);
 
-	printf("reader: %d is waiting for mutex\n", *tid);
+	printf("reader: %3d is  %11s : %7s\n", *tid, "waiting for", "mutex");
 	wait_sem(&mutex);
 
 	read_count--;
 	if (read_count == 0) {
-		printf("reader: %d is signaling writing\n", *tid);
+		printf("reader: %3d is  %11s : %7s\n", *tid, "signaling", "writing");
 		signal_sem(&writing);
 	}
 
-	printf("reader: %d is signaling mutex\n", *tid);
+	printf("reader: %3d is  %11s : %7s\n", *tid, "signaling", "mutex");
 	signal_sem(&mutex);
-
 
 	pthread_exit(NULL);
 
@@ -102,7 +101,7 @@ int main(int argc, char *argv[]) {
 		thread_ids[i]= i;
 
 		// randomly decide if thread is reader or writer
-		if (get_random() % 2 == 0) {
+		if (get_random(2) % 2 == 0) {
 			thread_func = reader;
 		}
 		else {
@@ -115,7 +114,6 @@ int main(int argc, char *argv[]) {
 			perror("pthread_create");
 			return EXIT_FAILURE;
 		}
-		sleep(1);
 	}
 
 	// join the threads
