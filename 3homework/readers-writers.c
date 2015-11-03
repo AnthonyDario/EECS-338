@@ -11,7 +11,7 @@
 sem_t mutex, writing;
 
 // variables
-int read_count = 0;
+int read_count;
 
 // wait for a semaphore
 void wait_sem(sem_t *sem) {
@@ -59,7 +59,7 @@ void *reader(int *tid) {
 	wait_sem(&mutex);
 
 	read_count--;
-	if (read_count = 0) {
+	if (read_count == 0) {
 		printf("reader: %d is signaling writing\n", *tid);
 		signal_sem(&writing);
 	}
@@ -79,6 +79,8 @@ int main(int argc, char *argv[]) {
 
 	int i;
 	void *thread_func;
+
+	read_count = 0;
 
 	// initialize semaphores
 	if (sem_init(&mutex, 0, (unsigned int)1) < 0 ||
@@ -112,13 +114,12 @@ int main(int argc, char *argv[]) {
 
 	// join the threads
 	for (i = 0; i < NUM_THREADS; i++) {
-		printf("waiting for thread: %d\n", i);
 		if (pthread_join(threads[i], NULL)) {
 			printf("join error\n");
 			fprintf(stderr, "pthread_join error");
 		}
-		printf("thread %d done\n", i);
 	}
+	printf("all threads done\n");
 
 	return EXIT_SUCCESS;
 
