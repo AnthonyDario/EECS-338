@@ -47,14 +47,26 @@ void *reader(int *tid) {
 	printf("reader: %d is waiting for 'mutex'\n", *tid);
 	wait_sem(&mutex);
 
-		read_count++;
-		if (read_count == 1) {
-			printf("reader: %d is waiting for 'write'\n", *tid);
-			wait_sem(&writing);
-		}
+	read_count++;
+	if (read_count == 1) {
+		printf("reader: %d is waiting for 'write'\n", *tid);
+		wait_sem(&writing);
+	}
 
-	printf("reader: %d is signaling 'mutex'\n", *tid);
 	signal_sem(&mutex);
+
+	printf("reader: %d is waiting for mutex\n", *tid);
+	wait_sem(&mutex);
+
+	read_count--;
+	if (read_count = 0) {
+		printf("reader: %d is signaling writing\n", *tid);
+		signal_sem(&writing);
+	}
+
+	printf("reader: %d is signaling mutex\n", *tid);
+	signal_sem(&mutex);
+
 
 	pthread_exit(NULL);
 
@@ -69,7 +81,7 @@ int main(int argc, char *argv[]) {
 	void *thread_func;
 
 	// initialize semaphores
-	if (sem_init(&mutex, 0, (unsigned int)1 < 0) ||
+	if (sem_init(&mutex, 0, (unsigned int)1) < 0 ||
 		sem_init(&writing, 0, (unsigned int)1) < 0) {
 
 		perror("sem_init");
@@ -88,7 +100,8 @@ int main(int argc, char *argv[]) {
 		else {
 			thread_func = writer;
 		}
-		printf("creating thread: %d\n", i);
+
+		// create the threads
 		if (pthread_create(&threads[i], NULL, thread_func, &thread_ids[i])) {
 			fprintf(stderr, "pthread_create error\n");
 			perror("pthread_create");
@@ -97,10 +110,14 @@ int main(int argc, char *argv[]) {
 		sleep(1);
 	}
 
+	// join the threads
 	for (i = 0; i < NUM_THREADS; i++) {
+		printf("waiting for thread: %d\n", i);
 		if (pthread_join(threads[i], NULL)) {
+			printf("join error\n");
 			fprintf(stderr, "pthread_join error");
 		}
+		printf("thread %d done\n", i);
 	}
 
 	return EXIT_SUCCESS;
