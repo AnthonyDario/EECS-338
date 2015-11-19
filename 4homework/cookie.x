@@ -1,24 +1,14 @@
 /* Program definition for RPC cookie jar */
 
 // struct to pass a request for cookie
-struct cookieRequest {
-
-};
-
-// struct to pass message
-struct message {
-
-};
-
-// struct to pass a cookie
-struct cookie {
+struct request {
 
 };
 
 program COOKIE_JAR {
     version COOKIE_JAR_VERSION {
-        
-        // stuff should go in here
+  
+        // stuff goes here
 
     } = 1;
-} = 0x2defaced
+} = 2020;
