@@ -29,15 +29,15 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
     // if this is Judy see if Tina has gotten 2
     if (c_req->b == 0) {
         if (tinaCount < 2) {
-            printf("You may have a cookie Judy\n");
-            cookies--;
-            tinaCount = 0;
+            printf("You have to wait for Tina to get %d more ", 2 - tinaCount);
 
             response = -1;
             return &response;
         } else {
-            printf("You have to wait for Tina to get %d more ", 2 - tinaCount);
+            printf("You may have a cookie Judy\n");
             printf("cookies before getting a cookie Judy\n");
+            cookies--;
+            tinaCount = 0;
 
             response = 1;
             return &response;
