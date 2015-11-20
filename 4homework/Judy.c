@@ -23,6 +23,10 @@ int request_cookie(CLIENT *client) {
 
 int main(int argc, char* argv[]) {
 
+    if (argc < 2) {
+        printf("Need to input the RPC server hostname\n");
+    }
+
     CLIENT *client;
 
     //create the client
@@ -37,7 +41,7 @@ int main(int argc, char* argv[]) {
     while (1) {
 
         // wait until hungry then request a cookie
-        wait(1);
+        wait(rand() % 4);
         request_cookie(client);
     }
 }

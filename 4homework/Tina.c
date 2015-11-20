@@ -38,14 +38,10 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (1) {
-        printf("1 is true\n");
-    }
-
     while (1) {
     
         // wait until hungry then request a cookie
-        wait(1);
+        wait(rand() % 4);
         request_cookie(client);
 
     }
