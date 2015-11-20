@@ -1,8 +1,9 @@
 /* Program definition for RPC cookie jar */
 
 // struct to pass a request for cookie
-struct request {
-
+struct cookie_request {
+    int a;  // the response to the request
+    int b;  // which sister is requesting
 };
 
 program COOKIE_JAR {
