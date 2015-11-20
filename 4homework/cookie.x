@@ -12,7 +12,7 @@ struct cookie_request {
 program COOKIE_JAR {
     version ASSIGNMENT_6 {
   
-        struct cookie_request GET_ME_MY_COOKIE(struct cookie_request) = 1;
+        int GET_ME_MY_COOKIE(struct cookie_request) = 1;
 
     } = 1;
 } = 2020;
