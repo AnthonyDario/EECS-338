@@ -49,7 +49,7 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req *req) {
 }
 
 // kill myself if I have given away all my cookies
-void done_with_cookies_1_svc(struct cookie_request, struct svc_req *req) {
+void done_with_cookies_1_svc(struct cookie_request c_req, struct svc_req *req) {
 
     told_no++;
     if (told_no == 2) {
