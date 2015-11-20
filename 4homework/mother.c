@@ -30,12 +30,12 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
     if (c_req->b == 0) {
         if (tinaCount < 2) {
             printf("You have to wait for Tina to get %d more ", 2 - tinaCount);
+            printf("cookies before getting a cookie Judy\n");
 
             response = -1;
             return &response;
         } else {
             printf("You may have a cookie Judy\n");
-            printf("cookies before getting a cookie Judy\n");
             cookies--;
             tinaCount = 0;
 
@@ -43,5 +43,4 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
             return &response;
         }
     }
-
 }
