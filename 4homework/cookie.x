@@ -9,7 +9,7 @@ struct cookie_request {
 program COOKIE_JAR {
     version COOKIE_JAR_VERSION {
   
-        // stuff goes here
+        struct cookie_request REQUEST_COOKIE(struct cookie_supplies) = 1;
 
     } = 1;
 } = 2020;
