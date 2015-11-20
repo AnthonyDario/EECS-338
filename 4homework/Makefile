@@ -22,3 +22,13 @@ clean:
 	@rm *.o
 	@clear
 	@echo clean
+
+# this will run the process with mother or linab3, 
+# Tina on linab2 and judy on linab7, you need my password for this though
+run:
+	@echo running mother...
+	@ssh -f ard74@eecslinab3.case.edu
+	@echo running Judy...
+	@ssh -f ard74@eecslinab7.case.edu
+	@echo running Tina...
+	@ssh -f ard74@eecslinab2.case.edu
