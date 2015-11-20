@@ -18,7 +18,8 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
 
     // if this is Tina then give her a cookie
     if (c_req->b == 1) {
-        printf("You can have a cookie Tina\n");
+        printf("You can have a cookie Tina");
+        printf(", there are %d cookies left\n", cookies);
         tinaCount++;
         cookies--;
 
@@ -36,6 +37,7 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
             return &response;
         } else {
             printf("You may have a cookie Judy\n");
+            printf(", there are %d cookies left\n", cookies);
             cookies--;
             tinaCount = 0;
 

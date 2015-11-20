@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "cookie.h"
 
+int cookies = 0;
+
 //request a cookie from mom
 void request_cookie(CLIENT *client) {
 
@@ -16,8 +18,12 @@ void request_cookie(CLIENT *client) {
     // if there are no more cookies then stop asking
     if (*cookie == -2) {
         printf("No more cookies for Tina...\n");
+        printf("At least I got %d cookies\n", cookies);
         clnt_destroy(client);
         exit(EXIT_SUCCESS);
+    } else {
+        cookies++;
+        printf("I got a cookie!\n\t Tina has gotten %d cookies\n", cookies);
     }
 }
 
