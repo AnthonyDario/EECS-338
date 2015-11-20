@@ -18,13 +18,13 @@ int request_cookie(CLIENT *client) {
     // if there are no more cookies then stop asking
     if (*cookie == -2) {
         printf("No more cookies for Judy...\n");
-        printf("At least I got %d cookies\n", cookies);
+        printf("\tAt least I got %d cookies\n", cookies);
         clnt_destroy(client);
         exit(EXIT_SUCCESS);
     } else if (*cookie == -1) {
-        printf("I have to wait for Tina, NOT FAIR\n");
+        printf("\tI have to wait for Tina, NOT FAIR\n");
     } else {
-        printf("I got a cookie! I have gotten %d cookies now!\n", cookies);
+        printf("\tI got a cookie! I have gotten %d cookies now!\n", cookies);
     }
 }
 

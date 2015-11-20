@@ -36,7 +36,7 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
             response = -1;
             return &response;
         } else {
-            printf("You may have a cookie Judy\n");
+            printf("You may have a cookie Judy");
             printf(", there are %d cookies left\n", cookies);
             cookies--;
             tinaCount = 0;
