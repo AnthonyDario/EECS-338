@@ -5,7 +5,7 @@ int cookies = 20;
 int tinaCount = 0;
 
 // gives a cookie to Tina or Judy
-int *get_me_my_cookie_svc(int a, int b) {
+int get_me_my_cookie_svc(int a, int b) {
 
     // if there are no more cookies then let the children know
     if (cookies < 1) {
@@ -18,7 +18,7 @@ int *get_me_my_cookie_svc(int a, int b) {
         printf("You can have a cookie Tina\n");
         tinaCount++;
         cookies--;
-        return &1;
+        return 1;
     }
 
     // if this is Judy see if Tina has gotten 2
@@ -27,11 +27,11 @@ int *get_me_my_cookie_svc(int a, int b) {
             printf("You may have a cookie Judy\n");
             cookies--;
             tinaCount = 0;
-            return &-1;
+            return -1;
         } else {
             printf("You have to wait for Tina to get %d more ", 2 - tinaCount);
             printf("cookies before getting a cookie Judy\n");
-            return &1;
+            return 1;
         }
     }
 
