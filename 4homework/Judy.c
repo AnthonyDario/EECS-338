@@ -20,7 +20,7 @@ int request_cookie(CLIENT *client) {
         printf("No more cookies for Judy...\n");
         printf("\tAt least I got %d cookies\n", cookies);
 
-        done_with_cookies_1(client);
+        done_with_cookies_1(NULL, client);
         clnt_destroy(client);
         exit(EXIT_SUCCESS);
     } else if (*cookie == -1) {
