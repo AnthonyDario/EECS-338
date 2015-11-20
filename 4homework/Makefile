@@ -2,6 +2,7 @@ COMPILER = gcc
 CLIENT = cookie_clnt.c
 XDR = cookie_xdr.c
 SVC = cookie_svc.c
+SERVER = eecslinab3.case.edu
 
 all:
 	@clear
@@ -27,8 +28,8 @@ clean:
 # Tina on linab2 and judy on linab7, you need my password for this though
 run:
 	@echo running mother...
-	@ssh -f ard74@eecslinab3.case.edu
+	@ssh -f ard74@eecslinab3.case.edu "./4homework/Mother.o"
 	@echo running Judy...
-	@ssh -f ard74@eecslinab7.case.edu
+	@ssh -f ard74@eecslinab7.case.edu "./EECS-338/4homework/Judy.o $(SERVER)"
 	@echo running Tina...
-	@ssh -f ard74@eecslinab2.case.edu
+	@ssh -f ard74@eecslinab2.case.edu "./EECS-338/4homework/Tina.o $(SERVER)"
