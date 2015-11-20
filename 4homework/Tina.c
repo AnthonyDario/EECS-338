@@ -19,6 +19,8 @@ void request_cookie(CLIENT *client) {
     if (*cookie == -2) {
         printf("No more cookies for Tina...\n");
         printf("At least I got %d cookies\n", cookies);
+
+        done_with_cookies_1(client);
         clnt_destroy(client);
         exit(EXIT_SUCCESS);
     } else {

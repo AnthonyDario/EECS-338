@@ -3,9 +3,10 @@
 
 int cookies = 20;
 int tinaCount = 0;
+int told_no = 0;
 
 // gives a cookie to Tina or Judy
-int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) {
+int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req *req) {
 
     static int response;
     // if there are no more cookies then let the children know
@@ -44,5 +45,14 @@ int *get_me_my_cookie_1_svc(struct cookie_request *c_req, struct svc_req * req) 
             response = 1;
             return &response;
         }
+    }
+}
+
+// kill myself if I have given away all my cookies
+void done_with_cookies_1_svc(struct svc_req *req) {
+
+    told_no++;
+    if (told_no == 2) {
+        exit(EXIT_SUCCESS);
     }
 }
