@@ -5,7 +5,7 @@ int cookies = 20;
 int tinaCount = 0;
 
 // gives a cookie to Tina or Judy
-int get_me_my_cookie_svc(int a, int b) {
+int get_me_my_cookie_svc(struct cookie_request, struct svc_req * req) {
 
     // if there are no more cookies then let the children know
     if (cookies < 1) {
