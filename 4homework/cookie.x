@@ -12,7 +12,8 @@ struct cookie_request {
 program COOKIE_JAR {
     version ASSIGNMENT_6 {
   
-        int get_me_my_cookie(struct cookie_request) = 1;
+        int GET_ME_MY_COOKIE(struct cookie_request) = 1;
+        void DONE_WITH_COOKIES() = 2;
 
     } = 1;
 } = 0x84467008;
