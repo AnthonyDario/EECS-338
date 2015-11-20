@@ -5,7 +5,7 @@
 #include "cookie.h"
 
 //request a cookie from mom
-int requestCookie() {
+int request_cookie(CLIENT *client) {
 
     int cookie = 0;
 
@@ -13,6 +13,7 @@ int requestCookie() {
     struct cookie_request request = {cookie, 1};
 
     // request the cookie
+    request_cookie_1(cookie_request, client);
 
     // if there are no more cookies then stop asking
     if (cookie == -2) {
@@ -41,7 +42,7 @@ int main(int argc, char* argv[]) {
     
         // wait until hungry then request a cookie
         wait(1);
-        requestCookie();
+        request_cookie(client);
 
     }
 }
