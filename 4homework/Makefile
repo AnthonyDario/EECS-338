@@ -11,10 +11,10 @@ all:
 
 clean:
 	@echo cleaning...
-	@rm *.o
 	@rm cookie.h
 	@rm cookie_clnt.c
 	@rm cookie_svc.c
 	@rm cookie_xdr.c
+	@rm *.o
 	@clear
 	@echo clean
