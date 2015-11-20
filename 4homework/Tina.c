@@ -7,13 +7,11 @@
 //request a cookie from mom
 int request_cookie(CLIENT *client) {
 
-    int cookie = 0;
-
     // create the request object
-    struct cookie_request request = {cookie, 1};
+    struct cookie_request request = {0, 1};
 
     // request the cookie
-    request_cookie_1(cookie_request, client);
+    int cookie = get_me_my_cookie_1(cookie_request, client);
 
     // if there are no more cookies then stop asking
     if (cookie == -2) {

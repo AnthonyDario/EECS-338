@@ -2,7 +2,12 @@ COMPILER = gcc
 
 all:
 	@clear
+	@rpcgen cookie.x
+	@clear
+	@echo generated
 	@$(COMPILER) -o Tina.o Tina.c
+	@$(COMPILER) -o Judy.o Judy.c
+	@$(COMPILER) -o Mother.o Mother.c
 
 clean:
 	@echo cleaning...
@@ -13,8 +18,3 @@ clean:
 	@rm cookie_xdr.c
 	@clear
 	@echo clean
-
-rpc:
-	@rpcgen cookie.x
-	@clear
-	@echo generated
