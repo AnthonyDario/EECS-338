@@ -24,6 +24,7 @@ int request_cookie(CLIENT *client) {
     } else if (*cookie == -1) {
         printf("\tI have to wait for Tina, NOT FAIR\n");
     } else {
+        cookies++;
         printf("\tI got a cookie! I have gotten %d cookies now!\n", cookies);
     }
 }
