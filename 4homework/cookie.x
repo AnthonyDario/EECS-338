@@ -1,13 +1,16 @@
 /* Program definition for RPC cookie jar */
 
-// struct to pass a request for cookie
+/* struct to pass a request for cookie 
+ * a is the response to the request
+ * b is the which sister is requesting
+ */
 struct cookie_request {
-    int a;  // the response to the request
-    int b;  // which sister is requesting
+    int a;  
+    int b; 
 };
 
 program COOKIE_JAR {
-    version COOKIE_JAR_VERSION {
+    version ASSIGNMENT_6 {
   
         struct cookie_request REQUEST_COOKIE(struct cookie_supplies) = 1;
 
