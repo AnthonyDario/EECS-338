@@ -29,7 +29,7 @@ int get_me_my_cookie(int a, int b) {
             tinaCount = 0;
             return -1;
         } else {
-            printf("You have to wait for Tina to get %d more ", 2 - tinaCount)
+            printf("You have to wait for Tina to get %d more ", 2 - tinaCount);
             printf("cookies before getting a cookie Judy\n");
             return 1;
         }
