@@ -11,6 +11,13 @@ int requestCookie() {
 
     // create the request object
     struct cookie_request request = {cookie, 1};
+
+    // request the cookie
+
+    // if there are no more cookies then stop asking
+    if (cookie == -2) {
+        exit(EXIT_SUCCESS);
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -24,10 +31,9 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    int cookie = 0
-    // request cookies randomly
-    while (cookie != -2) {
-
+    while (true) {
+    
+        // wait until hungry then request a cookie
         wait(1);
         cookie = requestCookie();
 
