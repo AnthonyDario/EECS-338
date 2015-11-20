@@ -17,6 +17,7 @@ int request_cookie(CLIENT *client) {
 
     // if there are no more cookies then stop asking
     if (cookie == -2) {
+        printf("No more cookies for Tina...\n");
         exit(EXIT_SUCCESS);
     }
 }
@@ -42,6 +43,7 @@ int main(int argc, char* argv[]) {
     
         // wait until hungry then request a cookie
         wait(rand() % 4);
+        printf("Tina is hungry, requesting cookie!\n");
         request_cookie(client);
 
     }
