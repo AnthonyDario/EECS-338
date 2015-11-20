@@ -1,7 +1,7 @@
 COMPILER = gcc
 CLIENT = cookie_clnt.c
 XDR = cookie_xdr.c
-SVC = cookie_svr.c
+SVC = cookie_svc.c
 
 all:
 	@clear
