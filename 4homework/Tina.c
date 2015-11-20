@@ -1,4 +1,4 @@
-/* Tina is the younger sister and must wait for Judy before eating */
+/* Tina is the older sister and can eat whenever she wants */
 
 #include <stdio.h>
 #include <stdlib.h>
