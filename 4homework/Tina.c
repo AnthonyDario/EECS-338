@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     while (1) {
     
         // wait until hungry then request a cookie
-        wait(rand() % 4);
+        sleep(rand() % 4);
         printf("Tina is hungry, requesting cookie!\n");
         request_cookie(client);
 

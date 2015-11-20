@@ -11,6 +11,7 @@ all:
 	@$(COMPILER) -o Tina.o Tina.c $(CLIENT) $(XDR) -lnsl
 	@$(COMPILER) -o Judy.o Judy.c $(CLIENT) $(XDR) -lnsl
 	@$(COMPILER) -o Mother.o Mother.c $(SVC) $(XDR) -lnsl
+	@echo compiled
 
 clean:
 	@echo cleaning...
