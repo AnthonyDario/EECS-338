@@ -1,0 +1,59 @@
+Script started on Fri Nov 20 20:38:06 2015
+ard74@eecslinab2:~/EECS-338/4homework$ logout./Tina.o eecslinab3.case.edumake[K./Tina.o eecslinab3.case.edu
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 1 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 2 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 3 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 4 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 5 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 6 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 7 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 8 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 9 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 10 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 11 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 12 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 13 cookies
+Tina is hungry, requesting cookie!
+I got a cookie!
+	 Tina has gotten 14 cookies
+Tina is hungry, requesting cookie!
+No more cookies for Tina...
+At least I got 14 cookies
+ard74@eecslinab2:~/EECS-338/4homework$ quit
+No command 'quit' found, did you mean:
+ Command 'quilt' from package 'quilt' (main)
+ Command 'luit' from package 'x11-utils' (main)
+ Command 'quot' from package 'quota' (main)
+ Command 'quiz' from package 'bsdgames' (universe)
+ Command 'qgit' from package 'qgit' (universe)
+quit: command not found
+ard74@eecslinab2:~/EECS-338/4homework$ ei x xit
+exit
+
+Script done on Fri Nov 20 20:39:21 2015
